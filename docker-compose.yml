@@ -19,6 +19,31 @@ services:
     networks:
       - opspulse-network
 
+  backend:
+    build: ./backend
+    container_name: opspulse-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - opspulse-network
+
+  frontend:
+    build: ./frontend
+    container_name: opspulse-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - opspulse-network
+
 volumes:
   mongodb_data:
 
