@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: opspulse-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - opspulse-network
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: opspulse-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - opspulse-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  opspulse-network:
+    driver: bridge
