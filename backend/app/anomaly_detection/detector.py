@@ -25,8 +25,10 @@ class AnomalyDetector:
         2. Prunes old metrics.
         3. Evaluates detection rules and returns any triggered Alerts.
         """
-        now = time.time()
-        log_ts = log.timestamp.timestamp()
+        # Use the log's own timestamp as the time anchor. This ensures
+        # event-time consistency and makes unit testing deterministic.
+        now = log.timestamp.timestamp()
+        log_ts = now
         
         alerts: List[AlertEvent] = []
 

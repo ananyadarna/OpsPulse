@@ -142,7 +142,7 @@ async def test_error_spike_detection():
     # To satisfy `curr_total >= 5` and `curr_error_rate > 0.05`
     for i in range(5):
         err_log = LogPayload(
-            timestamp=base_time + timedelta(seconds=35 + i),
+            timestamp=base_time + timedelta(seconds=100 + i),
             level="ERROR",
             service="test-service",
             endpoint="/api/v1/test",
