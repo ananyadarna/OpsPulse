@@ -5,8 +5,9 @@ import LiveLogsList from './components/LiveLogsList';
 import AlertsPanel from './components/AlertsPanel';
 import TrendsChart from './components/TrendsChart';
 
-const WS_URL = 'ws://localhost:8000/ws';
-const API_URL = 'http://localhost:8000/api';
+const API_HOST = window.location.hostname;
+const WS_URL = `ws://${API_HOST}:8000/ws`;
+const API_URL = `http://${API_HOST}:8000/api`;
 
 export default function App() {
   const [logs, setLogs] = useState([]);
