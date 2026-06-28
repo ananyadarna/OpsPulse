@@ -2,6 +2,8 @@
 
 ### Real-Time Production Monitoring & Intelligent Alerting Platform
 
+[🔗 Live Demo](http://13.201.3.193:3000)
+
 OpsPulse is a real-time system monitoring and observability platform. It ingests application log streams, processes them in real time, executes statistical anomaly detection rules (without slow, unexplainable ML models), and broadcasts alerts and parsed logs instantly to a dark, glassmorphic React dashboard over WebSockets.
 
 ---
@@ -46,64 +48,70 @@ OpsPulse is a real-time system monitoring and observability platform. It ingests
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Running the Platform
 
-### Option A: Run Locally (Recommended for Development)
+OpsPulse can be run locally for development or deployed to a cloud server using Docker Compose.
 
-#### 1. Prerequisites
-Ensure you have **MongoDB** and **Redis** running locally on their default ports (`27017` and `6379`). If you have Docker installed, you can start them with:
-```bash
-docker compose up -d mongodb redis
-```
+### Local Development Setup
 
-#### 2. Run the Backend
-```bash
-# Navigate to the backend directory
-cd backend
+To run the platform locally with hot-reloading:
 
-# Create a virtual environment (Python 3.12 recommended)
-py -3.12 -m venv venv
-source venv/Scripts/activate  # On Windows: .\venv\Scripts\activate
+1. **Start the Databases:** Ensure MongoDB and Redis are running locally on their default ports (`27017` and `6379`).
+   ```bash
+   docker compose up -d mongodb redis
+   ```
+2. **Start the Backend:**
+   ```bash
+   cd backend
+   py -3.12 -m venv venv
+   source venv/Scripts/activate  # On Windows: .\venv\Scripts\activate
+   pip install -r requirements.txt
+   uvicorn app.main:app --reload
+   ```
+   *The backend API is available at `http://localhost:8000`.*
 
-# Install dependencies
-pip install -r requirements.txt
+3. **Start the Frontend:**
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+   *The dashboard is available at `http://localhost:5173`.*
 
-# Run the FastAPI server
-uvicorn app.main:app --reload
-```
-*The backend will be available at `http://localhost:8000`.*
-
-#### 3. Run the Frontend
-```bash
-# Navigate to the frontend directory
-cd frontend
-
-# Install dependencies
-npm install
-
-# Run Vite development server
-npm run dev
-```
-*Open your browser and navigate to `http://localhost:5173`.*
-
-#### 4. Start the Log Generator
-In a new terminal, run the simulator to start streaming logs:
-```bash
-python backend/generate_logs.py
-```
+4. **Stream Simulated Logs:**
+   ```bash
+   python backend/generate_logs.py
+   ```
 
 ---
 
-### Option B: Run via Docker Compose (Full Stack)
+## ☁️ Cloud Deployment & Infrastructure
 
-If you have Docker Desktop running, you can spin up the entire multi-container stack with one command:
-```bash
-docker compose up --build
-```
-* The React Frontend will be available at `http://localhost:3000`
-* The FastAPI Backend will be available at `http://localhost:8000`
-* MongoDB runs on port `27017`
-* Redis runs on port `6379`
+The live demo of OpsPulse is deployed on a cloud virtual machine, showcasing a production-ready containerized infrastructure.
+
+* **Cloud Provider:** AWS EC2 (Asia Pacific - Mumbai region).
+* **Virtual Machine:** Ubuntu Server 24.04 LTS (`t3.micro`).
+* **Containerization & Orchestration:** Docker & Docker Compose.
+* **Network & Firewall Security:** Locked down via AWS Security Groups, exposing only:
+  * Port `22` (SSH) for secure administration.
+  * Port `3000` (Frontend) for accessing the React dashboard.
+  * Port `8000` (Backend) for the FastAPI REST API and WebSockets.
+  * All database ports (MongoDB on `27017` and Redis on `6379`) are isolated inside a private Docker bridge network, protected from public access.
+
+### Deployment Workflow
+
+The application was deployed using the following steps:
+
+1. **Server Provisioning:** Launched the Ubuntu EC2 instance on AWS and configured security groups.
+2. **Docker Installation:** Configured the Docker daemon and Docker Compose v2 on the host machine.
+3. **Containerized Orchestration:** Cloned the repository and spun up the multi-container stack:
+   ```bash
+   docker compose up -d --build
+   ```
+4. **Local-to-Cloud Ingestion:** The log generator runs locally and streams simulated log payloads directly to the cloud backend over HTTP:
+   ```bash
+   python backend/generate_logs.py --url http://13.201.3.193:8000/api/logs
+   ```
 
 ---
 
